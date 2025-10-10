@@ -1,4 +1,3 @@
-# Proyecto-Regresion-de-Costos-y-Prediccion-de-Diabetes
 # AI Insurance Models: Regresión de Costos y Predicción de Diabetes
 
 Este repositorio contiene un proyecto completo para: (1) predecir **costos de seguro médico** mediante regresión lineal y (2) predecir **diabetes** (clasificación). Además incluye comparación con RandomForest, análisis de umbral óptimo, técnicas de optimización, análisis de sesgo y una pequeña aplicación web para desplegar los modelos.
