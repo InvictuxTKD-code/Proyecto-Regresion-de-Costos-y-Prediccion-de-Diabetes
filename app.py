@@ -4,8 +4,11 @@ import joblib
 import os
 
 # ==============================
-# Cargar modelos
+# CONFIGURACIÓN Y CARGA DE MODELOS
 # ==============================
+st.set_page_config(page_title="Modelos IA - Predicciones", page_icon="🧠", layout="centered")
+
+# Cargar modelos
 diabetes_models = joblib.load("models/diabetes_models.joblib")
 lr_diabetes = diabetes_models["lr"]
 rf_diabetes = diabetes_models["rf"]
@@ -22,20 +25,19 @@ columns_insurance = insurance_models["columns"]
 os.makedirs("predicciones", exist_ok=True)
 
 # ==============================
-# Interfaz Streamlit
+# MENÚ LATERAL
 # ==============================
-st.title("🌟 Proyecto IA - Predicción de Diabetes y Seguro Médico")
-
-option = st.sidebar.selectbox(
-    "Selecciona el modelo",
-    ("Predicción de Diabetes", "Predicción de Costo de Seguro Médico")
+st.sidebar.title("Menú Principal")
+option = st.sidebar.radio(
+    "Selecciona una opción:",
+    ["🏥 Predicción de Diabetes", "💰 Predicción de Costo de Seguro Médico", "📜 Historial de Predicciones"]
 )
 
 # ==============================
-# Predicción Diabetes
+# PREDICCIÓN DE DIABETES
 # ==============================
-if option == "Predicción de Diabetes":
-    st.header("Predicción de Diabetes")
+if option == "🏥 Predicción de Diabetes":
+    st.header("🏥 Predicción de Diabetes")
 
     pregnancies = st.number_input("Número de embarazos (0 si es hombre)", min_value=0, max_value=20, value=0)
     glucose = st.number_input("Nivel de glucosa", min_value=0.0, max_value=300.0, value=120.0)
@@ -48,7 +50,6 @@ if option == "Predicción de Diabetes":
     model_type = st.selectbox("Modelo a usar", ["Logistic Regression", "Random Forest"])
 
     if st.button("Predecir Diabetes"):
-        # Preparar datos
         df = pd.DataFrame([{
             "Pregnancies": pregnancies,
             "Glucose": glucose,
@@ -70,6 +71,7 @@ if option == "Predicción de Diabetes":
 
         pred = int(prob >= threshold_diabetes)
         st.write(f"Probabilidad estimada de diabetes: **{prob:.2%}**")
+
         if pred == 1:
             st.warning("⚠️ Alta probabilidad de tener diabetes")
         else:
@@ -84,10 +86,10 @@ if option == "Predicción de Diabetes":
         st.write(f"✅ Resultado guardado en '{file_path}'")
 
 # ==============================
-# Predicción Seguro Médico
+# PREDICCIÓN DE COSTO DE SEGURO MÉDICO
 # ==============================
-else:
-    st.header("Predicción de Costo de Seguro Médico")
+elif option == "💰 Predicción de Costo de Seguro Médico":
+    st.header("💰 Predicción de Costo de Seguro Médico")
 
     age = st.number_input("Edad", min_value=0, max_value=120, value=35)
     sex = st.selectbox("Sexo", ["male", "female"])
@@ -97,20 +99,18 @@ else:
     region = st.selectbox("Región", ["southwest", "southeast", "northwest", "northeast"])
 
     if st.button("Predecir Costo"):
-        # Crear dataframe
         df = pd.DataFrame([{
             "age": age,
             "bmi": bmi,
             "children": children,
-            "sex_female": 1 if sex=="female" else 0,
-            "smoker_yes": 1 if smoker=="yes" else 0,
-            "region_northwest": 1 if region=="northwest" else 0,
-            "region_southeast": 1 if region=="southeast" else 0,
-            "region_southwest": 1 if region=="southwest" else 0
+            "sex_female": 1 if sex == "female" else 0,
+            "smoker_yes": 1 if smoker == "yes" else 0,
+            "region_northwest": 1 if region == "northwest" else 0,
+            "region_southeast": 1 if region == "southeast" else 0,
+            "region_southwest": 1 if region == "southwest" else 0
         }])
         df = df.reindex(columns=columns_insurance, fill_value=0)
 
-        # Predecir
         X_scaled = scaler_insurance.transform(df)
         cost = lr_insurance.predict(X_scaled)[0]
         st.write(f"Costo estimado del seguro médico: **${cost:,.2f}**")
@@ -120,3 +120,42 @@ else:
         file_path = "predicciones/predicciones_seguro.csv"
         df.to_csv(file_path, mode="a", index=False, header=not os.path.exists(file_path))
         st.write(f"✅ Resultado guardado en '{file_path}'")
+
+# ==============================
+# HISTORIAL DE PREDICCIONES
+# ==============================
+elif option == "📜 Historial de Predicciones":
+    st.header("📜 Historial de Predicciones")
+    st.write("Consulta aquí los registros históricos generados por los modelos IA.")
+
+    # --- Mostrar predicciones de Diabetes ---
+    diabetes_path = "predicciones/diabetes_predicciones.csv"
+    if os.path.exists(diabetes_path):
+        st.subheader("🔹 Historial de Predicciones de Diabetes")
+        df_diabetes = pd.read_csv(diabetes_path)
+        st.dataframe(df_diabetes)
+        st.download_button(
+            label="⬇️ Descargar historial de Diabetes",
+            data=df_diabetes.to_csv(index=False).encode("utf-8"),
+            file_name="diabetes_predicciones.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No hay predicciones de diabetes registradas aún.")
+
+    # --- Mostrar predicciones del Seguro Médico ---
+    seguro_path = "predicciones/predicciones_seguro.csv"
+    if os.path.exists(seguro_path):
+        st.subheader("🔹 Historial de Predicciones de Seguro Médico")
+        df_seguro = pd.read_csv(seguro_path)
+        st.dataframe(df_seguro)
+        st.download_button(
+            label="⬇️ Descargar historial de Seguros Médicos",
+            data=df_seguro.to_csv(index=False).encode("utf-8"),
+            file_name="predicciones_seguro.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No hay predicciones de seguro médico registradas aún.")
+
+
