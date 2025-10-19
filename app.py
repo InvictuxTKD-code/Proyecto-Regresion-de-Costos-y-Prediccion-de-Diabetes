@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import os
+from datetime import datetime
+import psycopg2
 
 # ==============================
 # CONFIGURACIÓN Y CARGA DE MODELOS
@@ -21,8 +22,52 @@ lr_insurance = insurance_models["lr"]
 scaler_insurance = insurance_models["scaler"]
 columns_insurance = insurance_models["columns"]
 
-# Crear carpeta de predicciones si no existe
-os.makedirs("predicciones", exist_ok=True)
+# ==============================
+# CONEXIÓN A BASE DE DATOS
+# ==============================
+DATABASE_URL = "postgresql://predicciones_app_ia_db_user:viH2gj2yO8H6kqaJ5EoOGOCWONsHSpr2@dpg-d3peeds9c44c73bvlts0-a.oregon-postgres.render.com/predicciones_app_ia_db"
+
+def get_conn():
+    return psycopg2.connect(DATABASE_URL)
+
+# Funciones para guardar en DB
+def guardar_prediccion_diabetes(resultado_dict):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO historial_diabetes (fecha, resultado)
+        VALUES (%s, %s);
+    """, (datetime.now(), str(resultado_dict)))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def guardar_prediccion_seguro(resultado_dict):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO historial_seguro (fecha, resultado)
+        VALUES (%s, %s);
+    """, (datetime.now(), str(resultado_dict)))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+# Función para leer historial
+def leer_historial(tabla):
+    conn = get_conn()
+    df = pd.read_sql(f"SELECT fecha, resultado FROM {tabla} ORDER BY fecha DESC;", conn)
+    conn.close()
+    return df
+
+# Función para limpiar historial
+def limpiar_historial(tabla):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(f"DELETE FROM {tabla};")
+    conn.commit()
+    cur.close()
+    conn.close()
 
 # ==============================
 # MENÚ LATERAL
@@ -44,13 +89,13 @@ if option == "🏥 Predicción de Diabetes":
     blood_pressure = st.number_input("Presión arterial", min_value=0.0, max_value=200.0, value=70.0)
     skin_thickness = st.number_input("Espesor de piel", min_value=0.0, max_value=100.0, value=25.0)
     insulin = st.number_input("Nivel de insulina", min_value=0.0, max_value=900.0, value=80.0)
-    bmi = st.number_input("Índice de masa corporal (BMI)", min_value=0.0, max_value=100.0, value=28.4)
+    bmi = st.number_input("Índice de masa corporal (IMC)", min_value=0.0, max_value=100.0, value=28.4)
     diabetes_pedigree = st.number_input("Función de pedigrí de diabetes", min_value=0.0, max_value=5.0, value=0.45)
     age = st.number_input("Edad", min_value=0, max_value=120, value=32)
     model_type = st.selectbox("Modelo a usar", ["Logistic Regression", "Random Forest"])
 
     if st.button("Predecir Diabetes"):
-        df = pd.DataFrame([{
+        df_input = pd.DataFrame([{
             "Pregnancies": pregnancies,
             "Glucose": glucose,
             "BloodPressure": blood_pressure,
@@ -60,33 +105,41 @@ if option == "🏥 Predicción de Diabetes":
             "DiabetesPedigreeFunction": diabetes_pedigree,
             "Age": age
         }])
-        df = df.reindex(columns=cols_diabetes)
+        df_input = df_input.reindex(columns=cols_diabetes)
 
-        # Seleccionar modelo
         if model_type == "Logistic Regression":
-            X_scaled = scaler_diabetes.transform(df)
+            X_scaled = scaler_diabetes.transform(df_input)
             prob = lr_diabetes.predict_proba(X_scaled)[0, 1]
         else:
-            prob = rf_diabetes.predict_proba(df)[0, 1]
+            prob = rf_diabetes.predict_proba(df_input)[0, 1]
 
         pred = int(prob >= threshold_diabetes)
         st.write(f"Probabilidad estimada de diabetes: **{prob:.2%}**")
 
+        # Mostrar alerta correctamente
         if pred == 1:
             st.warning("⚠️ Alta probabilidad de tener diabetes")
         else:
             st.success("✅ Baja probabilidad de diabetes")
 
-        # Guardar predicción
-        df["Modelo"] = model_type
-        df["Probabilidad"] = prob
-        df["Predicción"] = pred
-        file_path = "predicciones/diabetes_predicciones.csv"
-        df.to_csv(file_path, mode="a", index=False, header=not os.path.exists(file_path))
-        st.write(f"✅ Resultado guardado en '{file_path}'")
+        resultado_dict = {
+            "Embarazos": pregnancies,
+            "Glucosa": glucose,
+            "Presión Arterial": blood_pressure,
+            "Espesor de Piel": skin_thickness,
+            "Insulina": insulin,
+            "IMC": bmi,
+            "Función Pedigrí": diabetes_pedigree,
+            "Edad": age,
+            "Modelo": model_type,
+            "Probabilidad": prob,
+            "Predicción": pred
+        }
+        guardar_prediccion_diabetes(resultado_dict)
+        st.success("✅ Resultado guardado en la base de datos.")
 
 # ==============================
-# PREDICCIÓN DE COSTO DE SEGURO MÉDICO
+# PREDICCIÓN DE SEGURO MÉDICO
 # ==============================
 elif option == "💰 Predicción de Costo de Seguro Médico":
     st.header("💰 Predicción de Costo de Seguro Médico")
@@ -99,7 +152,7 @@ elif option == "💰 Predicción de Costo de Seguro Médico":
     region = st.selectbox("Región", ["southwest", "southeast", "northwest", "northeast"])
 
     if st.button("Predecir Costo"):
-        df = pd.DataFrame([{
+        df_encoded = pd.DataFrame([{
             "age": age,
             "bmi": bmi,
             "children": children,
@@ -109,17 +162,23 @@ elif option == "💰 Predicción de Costo de Seguro Médico":
             "region_southeast": 1 if region == "southeast" else 0,
             "region_southwest": 1 if region == "southwest" else 0
         }])
-        df = df.reindex(columns=columns_insurance, fill_value=0)
+        df_encoded = df_encoded.reindex(columns=columns_insurance, fill_value=0)
 
-        X_scaled = scaler_insurance.transform(df)
+        X_scaled = scaler_insurance.transform(df_encoded)
         cost = lr_insurance.predict(X_scaled)[0]
         st.write(f"Costo estimado del seguro médico: **${cost:,.2f}**")
 
-        # Guardar predicción
-        df["predicted_cost"] = cost
-        file_path = "predicciones/predicciones_seguro.csv"
-        df.to_csv(file_path, mode="a", index=False, header=not os.path.exists(file_path))
-        st.write(f"✅ Resultado guardado en '{file_path}'")
+        resultado_dict = {
+            "Edad": age,
+            "Sexo": sex,
+            "IMC": bmi,
+            "Hijos": children,
+            "Fumador": smoker,
+            "Región": region,
+            "Costo_Predicho": round(cost, 2)
+        }
+        guardar_prediccion_seguro(resultado_dict)
+        st.success("✅ Resultado guardado en la base de datos.")
 
 # ==============================
 # HISTORIAL DE PREDICCIONES
@@ -128,34 +187,47 @@ elif option == "📜 Historial de Predicciones":
     st.header("📜 Historial de Predicciones")
     st.write("Consulta aquí los registros históricos generados por los modelos IA.")
 
-    # --- Mostrar predicciones de Diabetes ---
-    diabetes_path = "predicciones/diabetes_predicciones.csv"
-    if os.path.exists(diabetes_path):
+    # Historial Diabetes
+    df_diabetes = leer_historial("historial_diabetes")
+    if not df_diabetes.empty:
         st.subheader("🔹 Historial de Predicciones de Diabetes")
-        df_diabetes = pd.read_csv(diabetes_path)
-        st.dataframe(df_diabetes)
-        st.download_button(
-            label="⬇️ Descargar historial de Diabetes",
-            data=df_diabetes.to_csv(index=False).encode("utf-8"),
-            file_name="diabetes_predicciones.csv",
-            mime="text/csv"
-        )
+        df_diabetes_display = pd.json_normalize(df_diabetes["resultado"].apply(eval))  # convertir dict a tabla
+        df_diabetes_display["Fecha"] = df_diabetes["fecha"]
+        st.dataframe(df_diabetes_display)
     else:
         st.info("No hay predicciones de diabetes registradas aún.")
 
-    # --- Mostrar predicciones del Seguro Médico ---
-    seguro_path = "predicciones/predicciones_seguro.csv"
-    if os.path.exists(seguro_path):
+    # Historial Seguro Médico
+    df_seguro = leer_historial("historial_seguro")
+    if not df_seguro.empty:
         st.subheader("🔹 Historial de Predicciones de Seguro Médico")
-        df_seguro = pd.read_csv(seguro_path)
-        st.dataframe(df_seguro)
-        st.download_button(
-            label="⬇️ Descargar historial de Seguros Médicos",
-            data=df_seguro.to_csv(index=False).encode("utf-8"),
-            file_name="predicciones_seguro.csv",
-            mime="text/csv"
-        )
+        df_seguro_display = pd.json_normalize(df_seguro["resultado"].apply(eval))
+        df_seguro_display["Fecha"] = df_seguro["fecha"]
+        st.dataframe(df_seguro_display)
     else:
         st.info("No hay predicciones de seguro médico registradas aún.")
 
+    st.divider()
 
+    # Limpieza de historial
+    st.subheader("🧹 Administración del Historial")
+    limpiar = st.radio(
+        "Selecciona qué historial deseas limpiar:",
+        ["Ninguno", "Historial de Diabetes", "Historial de Seguro Médico", "Ambos"]
+    )
+    confirmar = st.checkbox("✅ Confirmo que deseo eliminar el historial seleccionado permanentemente.")
+
+    if st.button("🗑️ Limpiar Historial Seleccionado"):
+        if not confirmar:
+            st.warning("⚠️ Debes confirmar la eliminación antes de continuar.")
+        else:
+            if limpiar == "Historial de Diabetes":
+                limpiar_historial("historial_diabetes")
+                st.success("✅ Historial de Diabetes eliminado.")
+            elif limpiar == "Historial de Seguro Médico":
+                limpiar_historial("historial_seguro")
+                st.success("✅ Historial de Seguro Médico eliminado.")
+            elif limpiar == "Ambos":
+                limpiar_historial("historial_diabetes")
+                limpiar_historial("historial_seguro")
+                st.success("✅ Ambos historiales eliminados.")

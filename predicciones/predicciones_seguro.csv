@@ -1,6 +1,2 @@
-age,sex,bmi,children,smoker,region,predicted_cost
-22,male,28.5,0,no,southwest,3403.9035536128267
-47,female,31.2,2,yes,northwest,11514.825728098022
-35,male,22.8,1,no,southeast,5231.62574698896
-35,28.0,0,0,1,0,0,1,29178.88357903339
-35,28.0,0,0,1,0,0,1,29178.88357903339
+Fecha,Edad,Sexo,IMC,Hijos,Fumador,Región,Costo_Predicho
+2025-10-17 16:18:40,35,male,28.0,0,yes,southwest,29178.88
