@@ -30,14 +30,19 @@ columns_insurance = insurance_models["columns"]
 # CONEXIÓN A BASE DE DATOS
 # ==============================
 
-# Leer la variable de entorno (Render la proveerá automáticamente)
+# Leer variable de entorno (Render la proveerá automáticamente)
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    st.error("❌ No se encontró la variable DATABASE_URL. Configúrala en Render.")
+    st.stop()
 
 # Crear motor SQLAlchemy (para consultas con pandas)
 engine = create_engine(
     DATABASE_URL,
     connect_args={"sslmode": "require"}  # 🔒 SSL obligatorio para Render PostgreSQL
 )
+
 
 # Función auxiliar para conexión con psycopg2
 def get_conn():
@@ -247,4 +252,3 @@ elif option == "📜 Historial de Predicciones":
                 limpiar_historial("historial_diabetes")
                 limpiar_historial("historial_seguro")
                 st.success("✅ Ambos historiales eliminados.")
-
