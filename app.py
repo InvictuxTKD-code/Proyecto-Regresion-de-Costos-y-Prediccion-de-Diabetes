@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 from datetime import datetime
 import psycopg2
+import os
+from sqlalchemy import create_engine
 
 # ==============================
 # CONFIGURACIÓN Y CARGA DE MODELOS
@@ -25,12 +27,25 @@ columns_insurance = insurance_models["columns"]
 # ==============================
 # CONEXIÓN A BASE DE DATOS
 # ==============================
-DATABASE_URL = "postgresql://predicciones_app_ia_db_user:viH2gj2yO8H6kqaJ5EoOGOCWONsHSpr2@dpg-d3peeds9c44c73bvlts0-a.oregon-postgres.render.com/predicciones_app_ia_db"
 
+# Leer la variable de entorno (Render la proveerá automáticamente)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Crear motor SQLAlchemy (para consultas con pandas)
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"sslmode": "require"}  # 🔒 SSL obligatorio para Render PostgreSQL
+)
+
+# Función auxiliar para conexión con psycopg2
 def get_conn():
-    return psycopg2.connect(DATABASE_URL)
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
 
-# Funciones para guardar en DB
+# --------------------------
+# FUNCIONES CRUD
+# --------------------------
+
+# Guardar predicción de diabetes
 def guardar_prediccion_diabetes(resultado_dict):
     conn = get_conn()
     cur = conn.cursor()
@@ -42,6 +57,7 @@ def guardar_prediccion_diabetes(resultado_dict):
     cur.close()
     conn.close()
 
+# Guardar predicción de seguro médico
 def guardar_prediccion_seguro(resultado_dict):
     conn = get_conn()
     cur = conn.cursor()
@@ -53,14 +69,12 @@ def guardar_prediccion_seguro(resultado_dict):
     cur.close()
     conn.close()
 
-# Función para leer historial
+# Leer historial desde cualquier tabla
 def leer_historial(tabla):
-    conn = get_conn()
-    df = pd.read_sql(f"SELECT fecha, resultado FROM {tabla} ORDER BY fecha DESC;", conn)
-    conn.close()
+    df = pd.read_sql(f"SELECT fecha, resultado FROM {tabla} ORDER BY fecha DESC;", engine)
     return df
 
-# Función para limpiar historial
+# Limpiar historial
 def limpiar_historial(tabla):
     conn = get_conn()
     cur = conn.cursor()
