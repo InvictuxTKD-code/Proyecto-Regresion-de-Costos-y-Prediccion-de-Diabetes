@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import streamlit as st
 import pandas as pd
 import joblib
@@ -245,3 +247,4 @@ elif option == "📜 Historial de Predicciones":
                 limpiar_historial("historial_diabetes")
                 limpiar_historial("historial_seguro")
                 st.success("✅ Ambos historiales eliminados.")
+
