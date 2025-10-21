@@ -4,6 +4,7 @@ version = "1.0.0"
 description = "App de predicción de diabetes y costos médicos con Streamlit y PostgreSQL"
 authors = ["Andrés Jaramillo <andresjaramillo979@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
