@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "prediccion-diabetes-seguro"
+version = "1.0.0"
+description = "App de predicción de diabetes y costos médicos con Streamlit y PostgreSQL"
+authors = ["Andrés Jaramillo <andresjaramillo979@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "1.37.1"
+pandas = "2.2.2"
+numpy = "1.26.4"
+scikit-learn = "1.5.2"
+psycopg2-binary = "2.9.9"
+SQLAlchemy = "2.0.23"
+plotly = "5.22.0"
+joblib = "1.4.2"
+python-dotenv = "1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
