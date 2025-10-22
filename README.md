@@ -98,11 +98,11 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 
 ---
 
-### 💰 2️⃣ Factores que más influyen en el precio del seguro médico
+### 💰 2️⃣ Factores que más influyen en el precio del seguro médico 
 
 | Variable     | Influencia  | Descripción                        |
 | ------------ | ----------- | ---------------------------------- |
-| smoker_yes   | 🔥 Muy alta | Fumar eleva drásticamente el costo |
+| smoker_yes   | Muy alta | Fumar eleva drásticamente el costo |
 | bmi          | Alta        | Refleja el riesgo por sobrepeso    |
 | age          | Alta        | Los costos suben con la edad       |
 | children     | Media       | Incrementa gastos asociados        |
@@ -130,22 +130,22 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 ---
 
 ### ⚙️ 4️⃣ Técnicas de optimización aplicadas
-```
-Técnica	Propósito	Resultado
-StandardScaler	Escalar variables	Aumenta estabilidad del modelo
-GridSearchCV	Ajuste de hiperparámetros	Mejora F1 y R²
-Ajuste de Umbral	Balancear precisión y recall	Reduce sesgo de clase
-```
+
+| Técnica                                               | Propósito                    | Resultado             |
+| ----------------------------------------------------- | ---------------------------- | --------------------- |
+| StandardScaler                                        | Escalar variables            | Mayor estabilidad     |
+| GridSearchCV                                          | Ajuste de hiperparámetros    | Mejora F1 y R²        |
+| Ajuste de Umbral                                      | Balancear precisión y recall | Reduce sesgo de clase |
+
 ✅ Conclusión: La combinación de escalado + búsqueda de hiperparámetros + ajuste de umbral optimizó ambos modelos.
 
 ---
 
 ### 📚 5️⃣ Contexto de los datos
 
-Diabetes: Conjunto Pima Indians Diabetes Database (EE.UU.), mujeres indígenas Pima.
-Variables clínicas: glucosa, IMC, insulina, edad, etc.
-
-Seguro Médico: Dataset público de Kaggle con datos de edad, IMC, hijos, región y tabaquismo.
+- Diabetes: Conjunto Pima Indians Diabetes Database (EE.UU.), mujeres indígenas Pima.
+- Variables clínicas: glucosa, IMC, insulina, edad, etc.
+- Seguro Médico: Dataset público de Kaggle con datos de edad, IMC, hijos, región y tabaquismo.
 
 ✅ Ambos datasets fueron preprocesados, limpios y estandarizados antes del entrenamiento.
 
