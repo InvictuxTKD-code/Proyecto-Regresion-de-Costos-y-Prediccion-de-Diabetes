@@ -78,17 +78,19 @@ Crear un archivo ```.env``` con la siguiente línea:
 ---
 
 ## ☁️ Despliegue en Render
-
 ### Start Command
-```poetry run streamlit run app.py --server.port $PORT --server.address 0.0.0.0```
+```
+poetry run streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+```
 
 ### Variables de Entorno
-```DATABASE_URL = <cadena de conexión PostgreSQL>```
-```PYTHON_VERSION = 3.11.9```
+```
+DATABASE_URL = <cadena de conexión PostgreSQL>
+PYTHON_VERSION = 3.11.9
+```
 ---
 ## 📊 Análisis de Modelos y Respuestas del Informe
 ### 🧩 1️⃣ ¿Cuál es el umbral ideal para el modelo de predicción de diabetes?
-
 El modelo de Regresión Logística utiliza un umbral óptimo de 0.287, determinado mediante análisis ROC y F1-score.
 Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin aumentar falsos positivos.
 
