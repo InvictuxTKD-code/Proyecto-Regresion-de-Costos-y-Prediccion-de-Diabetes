@@ -29,6 +29,7 @@ La aplicación fue diseñada, entrenada y desplegada completamente en la nube co
 ---
 
 ## 🧠 Arquitectura del Proyecto
+```
 📁 Proyecto-Regresion-de-Costos-y-Prediccion-de-Diabetes
 │
 ├── 📂 models # Modelos entrenados (joblib)
@@ -41,7 +42,7 @@ La aplicación fue diseñada, entrenada y desplegada completamente en la nube co
 ├── pyproject.toml # Configuración Poetry
 ├── requirements.txt # Dependencias del entorno
 └── runtime.txt # Versión de Python para Render
-
+```
 ---
 
 ## ⚙️ Instrucciones de Ejecución Local
