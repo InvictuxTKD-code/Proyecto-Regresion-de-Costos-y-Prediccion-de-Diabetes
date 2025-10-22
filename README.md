@@ -151,24 +151,24 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 
 ---
 
-⚖️ 6️⃣ Análisis de sesgo de los modelos
-🩺 Modelo de Diabetes
+### ⚖️ 6️⃣ Análisis de sesgo de los modelos
+#### 🩺 Modelo de Diabetes
 
-Sesgo leve hacia “no diabético” por desbalance de clases.
+- Sesgo leve hacia “no diabético” por desbalance de clases.
 
-Mitigado ajustando el umbral y aplicando balanceo parcial.
+- Mitigado ajustando el umbral y aplicando balanceo parcial.
 
-💵 Modelo de Seguro Médico
+#### 💵 Modelo de Seguro Médico
 
-Tiende a sobreestimar costos para fumadores.
+- Tiende a sobreestimar costos para fumadores.
 
-Ajuste mediante normalización de valores extremos.
+- Ajuste mediante normalización de valores extremos.
 
 ✅ Conclusión: Ambos modelos reflejan sesgos inherentes al dataset, pero se mitigaron mediante normalización y ajuste de umbrales.
 
 ---
 
-🧠 Conclusiones Finales
+## 🧠 Conclusiones Finales
 
 Se integraron con éxito modelos de IA dentro de una aplicación web interactiva.
 
