@@ -55,47 +55,48 @@ cd Proyecto-Regresion-de-Costos-y-Prediccion-de-Diabetes
 
 ---
 
-###🔹 2. Crear entorno virtual e instalar dependencias
+### 🔹 2. Crear entorno virtual e instalar dependencias
+```
 poetry install
-
+```
 ---
 
-###🔹 3. Configurar variables de entorno
-Crear un archivo .env con la siguiente línea:
-DATABASE_URL=postgresql://usuario:contraseña@host:puerto/nombre_base
+### 🔹 3. Configurar variables de entorno
+Crear un archivo ```.env``` con la siguiente línea:
+```DATABASE_URL=postgresql://usuario:contraseña@host:puerto/nombre_base```
 
 ---
 
 ### 🔹 4. Ejecutar la aplicación
-streamlit run app.py
+```streamlit run app.py```
 
 ---
 
 ### 🔹 5. Abrir en navegador
-http://localhost:8501
+```http://localhost:8501```
 
 ---
 
-☁️ Despliegue en Render
+## ☁️ Despliegue en Render
 
-Start Command
-poetry run streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+### Start Command
+```poetry run streamlit run app.py --server.port $PORT --server.address 0.0.0.0```
 
-Variables de Entorno
-DATABASE_URL = <cadena de conexión PostgreSQL>
-PYTHON_VERSION = 3.11.9
-
-📊 Análisis de Modelos y Respuestas del Informe
-🧩 1️⃣ ¿Cuál es el umbral ideal para el modelo de predicción de diabetes?
+### Variables de Entorno
+```DATABASE_URL = <cadena de conexión PostgreSQL>```
+```PYTHON_VERSION = 3.11.9```
+---
+## 📊 Análisis de Modelos y Respuestas del Informe
+### 🧩 1️⃣ ¿Cuál es el umbral ideal para el modelo de predicción de diabetes?
 
 El modelo de Regresión Logística utiliza un umbral óptimo de 0.287, determinado mediante análisis ROC y F1-score.
 Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin aumentar falsos positivos.
 
 ✅ Conclusión: El umbral de 0.287 maximiza la detección de casos potenciales de diabetes.
 
---
+---
 
-💰 2️⃣ Factores que más influyen en el precio del seguro médico
+## 💰 2️⃣ Factores que más influyen en el precio del seguro médico
 Variable	Influencia	Descripción
 smoker_yes	🔥 Muy alta	Fumar eleva drásticamente el costo
 bmi	Alta	Refleja el riesgo por sobrepeso
