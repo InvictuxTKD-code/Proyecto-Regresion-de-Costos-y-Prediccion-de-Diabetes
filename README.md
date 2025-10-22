@@ -98,7 +98,7 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 
 ---
 
-## 💰 2️⃣ Factores que más influyen en el precio del seguro médico
+### 💰 2️⃣ Factores que más influyen en el precio del seguro médico
 Variable	Influencia	Descripción
 smoker_yes	🔥 Muy alta	Fumar eleva drásticamente el costo
 bmi	Alta	Refleja el riesgo por sobrepeso
@@ -110,7 +110,8 @@ region / sex	Baja	Afectan marginalmente
 
 ---
 
-🌲 3️⃣ Comparativa de características usando RandomForest
+### 🌲 3️⃣ Comparativa de características usando RandomForest
+```
 🔹 Modelo de Diabetes
 
 Variables más relevantes: Glucosa, Edad, IMC.
@@ -122,22 +123,23 @@ Menor influencia: Espesor de piel, Presión arterial.
 Variables más relevantes: Fumar, Edad, BMI.
 
 Menor influencia: Región, Sexo.
-
+```
 ✅ Conclusión: En ambos casos, los factores fisiológicos y de riesgo predominan sobre los demográficos.
 
 ---
 
-⚙️ 4️⃣ Técnicas de optimización aplicadas
+### ⚙️ 4️⃣ Técnicas de optimización aplicadas
+```
 Técnica	Propósito	Resultado
 StandardScaler	Escalar variables	Aumenta estabilidad del modelo
 GridSearchCV	Ajuste de hiperparámetros	Mejora F1 y R²
 Ajuste de Umbral	Balancear precisión y recall	Reduce sesgo de clase
-
+```
 ✅ Conclusión: La combinación de escalado + búsqueda de hiperparámetros + ajuste de umbral optimizó ambos modelos.
 
 ---
 
-📚 5️⃣ Contexto de los datos
+### 📚 5️⃣ Contexto de los datos
 
 Diabetes: Conjunto Pima Indians Diabetes Database (EE.UU.), mujeres indígenas Pima.
 Variables clínicas: glucosa, IMC, insulina, edad, etc.
