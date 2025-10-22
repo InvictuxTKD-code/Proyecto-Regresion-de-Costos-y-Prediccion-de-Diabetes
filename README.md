@@ -174,7 +174,8 @@ Este proyecto demuestra cómo la Inteligencia Artificial puede integrarse efecti
 
 ## 📎 Licencia
 
-Este proyecto fue desarrollado con fines educativos y de demostración de un flujo completo de IA aplicada.
-© 2025 Andrés Jaramillo. Todos los derechos reservados.
+*Este proyecto fue desarrollado con fines educativos y de demostración de un flujo completo de IA aplicada.*  
+**© 2025 Andrés Jaramillo. Todos los derechos reservados.**
+
 
 
