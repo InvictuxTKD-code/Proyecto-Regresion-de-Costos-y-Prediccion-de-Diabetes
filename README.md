@@ -155,13 +155,11 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 #### 🩺 Modelo de Diabetes
 
 - Sesgo leve hacia “no diabético” por desbalance de clases.
-
 - Mitigado ajustando el umbral y aplicando balanceo parcial.
 
 #### 💵 Modelo de Seguro Médico
 
 - Tiende a sobreestimar costos para fumadores.
-
 - Ajuste mediante normalización de valores extremos.
 
 ✅ Conclusión: Ambos modelos reflejan sesgos inherentes al dataset, pero se mitigaron mediante normalización y ajuste de umbrales.
@@ -170,17 +168,11 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 
 ## 🧠 Conclusiones Finales
 
-Se integraron con éxito modelos de IA dentro de una aplicación web interactiva.
-
-Se logró una conexión estable a PostgreSQL en la nube y almacenamiento persistente.
-
-El flujo completo de entrenamiento, evaluación y despliegue sigue principios de MLOps.
-
-El proyecto demuestra un nivel técnico profesional, combinando análisis de datos, desarrollo backend, interfaz web y despliegue productivo.
+Este proyecto demuestra cómo la Inteligencia Artificial puede integrarse efectivamente en una aplicación web interactiva, ofreciendo predicciones precisas de salud y costos de seguros. La combinación de análisis de datos, desarrollo de modelos, procesamiento de información y despliegue en la nube muestra un enfoque completo de MLOps. En conjunto, la solución aporta valor práctico y educativo, destacando la importancia de la IA en la toma de decisiones y la gestión de datos en entornos reales.
 
 ---
 
-📎 Licencia
+## 📎 Licencia
 
 Este proyecto fue desarrollado con fines educativos y de demostración de un flujo completo de IA aplicada.
 © 2025 Andrés Jaramillo. Todos los derechos reservados.
