@@ -99,12 +99,14 @@ Este valor equilibra precisión y sensibilidad, reduciendo falsos negativos sin 
 ---
 
 ### 💰 2️⃣ Factores que más influyen en el precio del seguro médico
-Variable	Influencia	Descripción
-smoker_yes	🔥 Muy alta	Fumar eleva drásticamente el costo
-bmi	Alta	Refleja el riesgo por sobrepeso
-age	Alta	Los costos suben con la edad
-children	Media	Incrementa gastos asociados
-region / sex	Baja	Afectan marginalmente
+
+| Variable     | Influencia  | Descripción                        |
+| ------------ | ----------- | ---------------------------------- |
+| smoker_yes   | 🔥 Muy alta | Fumar eleva drásticamente el costo |
+| bmi          | Alta        | Refleja el riesgo por sobrepeso    |
+| age          | Alta        | Los costos suben con la edad       |
+| children     | Media       | Incrementa gastos asociados        |
+| region / sex | Baja        | Afectan marginalmente              |
 
 ✅ Conclusión: Tabaquismo, IMC y edad son los factores determinantes del costo del seguro.
 
