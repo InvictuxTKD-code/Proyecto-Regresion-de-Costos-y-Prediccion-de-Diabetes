@@ -111,19 +111,18 @@ region / sex	Baja	Afectan marginalmente
 ---
 
 ### 🌲 3️⃣ Comparativa de características usando RandomForest
-```
-🔹 Modelo de Diabetes
 
-Variables más relevantes: Glucosa, Edad, IMC.
+#### 🔹 Modelo de Diabetes
+- Variables más relevantes: Glucosa, Edad, IMC.
 
-Menor influencia: Espesor de piel, Presión arterial.
+- Menor influencia: Espesor de piel, Presión arterial.
 
-🔹 Modelo de Seguro Médico
+#### 🔹 Modelo de Seguro Médico
 
-Variables más relevantes: Fumar, Edad, BMI.
+- Variables más relevantes: Fumar, Edad, BMI.
 
-Menor influencia: Región, Sexo.
-```
+- Menor influencia: Región, Sexo.
+
 ✅ Conclusión: En ambos casos, los factores fisiológicos y de riesgo predominan sobre los demográficos.
 
 ---
